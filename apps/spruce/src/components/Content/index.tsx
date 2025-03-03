@@ -6,6 +6,7 @@ import {
   UserPatchesRedirect,
   WaterfallCommitsRedirect,
 } from "components/Redirects";
+import { LegacyWaterfallRedirect } from "components/Redirects/LegacyWaterfallRedirect";
 import { showWaterfallPage } from "constants/featureFlags";
 import { redirectRoutes, routes, slugs } from "constants/routes";
 import { useAdminBetaFeatures } from "hooks";
@@ -40,6 +41,10 @@ export const Content: React.FC = () => {
         <Route element={<Navigate to={routes.myPatches} />} path="/" />
         <Route element={<Commits />} path={routes.commits} />
         <Route element={<Container />} path={routes.container} />
+        <Route
+          element={<LegacyWaterfallRedirect />}
+          path={redirectRoutes.legacyWaterfall}
+        />
         <Route
           element={<WaterfallCommitsRedirect />}
           path={redirectRoutes.waterfall}

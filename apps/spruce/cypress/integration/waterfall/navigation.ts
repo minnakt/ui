@@ -1,3 +1,5 @@
+import { CURRENT_PROJECT } from "constants/cookies";
+
 describe("navigation", () => {
   it("can view the waterfall page", () => {
     cy.visit("/project/evergreen/waterfall");
@@ -42,5 +44,30 @@ describe("navigation", () => {
     cy.dataCy("auxiliary-dropdown-link").click();
     cy.dataCy("auxiliary-dropdown-waterfall").should("not.exist");
     cy.dataCy("auxiliary-dropdown-project-health").should("be.visible");
+  });
+
+  it("redirect navigates to either commits or waterfall page", () => {
+    cy.setCookie(CURRENT_PROJECT, "logkeeper");
+
+    // Should redirect to commits if not opted in to beta test.
+    cy.visit("/waterfall");
+    cy.location("pathname").should("contain", "/commits/logkeeper");
+
+    // Opt the user in to the beta test.
+    cy.visit("/preferences/ui-settings");
+    cy.dataCy("spruce-waterfall-enabled").within(() => {
+      cy.get('[data-label="Enabled"]').click({ force: true });
+    });
+    cy.dataCy("save-beta-features-button").should(
+      "have.attr",
+      "aria-disabled",
+      "false",
+    );
+    cy.dataCy("save-beta-features-button").click();
+    cy.validateToast("success", "Your changes have been saved.");
+
+    // Should redirect to waterfall if opted in to beta test.
+    cy.visit("/waterfall");
+    cy.location("pathname").should("contain", "project/logkeeper/waterfall");
   });
 });

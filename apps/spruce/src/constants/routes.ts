@@ -116,7 +116,8 @@ export const redirectRoutes = {
   patch: `${paths.patch}/:${slugs.versionId}`,
   projectSettings: paths.projects,
   userPatches: `${paths.user}/:${slugs.userId}`,
-  waterfall: `${paths.waterfall}/:${slugs.projectIdentifier}`,
+  legacyWaterfall: `${paths.waterfall}/:${slugs.projectIdentifier}`,
+  waterfall: paths.waterfall,
 };
 
 export const routes = {
