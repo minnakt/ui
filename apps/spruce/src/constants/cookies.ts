@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export const CURRENT_PROJECT = "mci-project-cookie";
 export const DISABLE_QUERY_POLLING = "disable-query-polling";
 export const DISABLE_TASK_REVIEW = "disable-task-review";
@@ -7,7 +9,13 @@ export const HIDE_FEEDBACK = "HIDE_FEEDBACK";
 export const INCLUDE_COMMIT_QUEUE_PROJECT_PATCHES =
   "include-commit-queue-project-patches";
 export const INCLUDE_HIDDEN_PATCHES = "include-hidden-patches";
+
 export const INCLUDE_NEVER_ACTIVATED_TASKS = "include-never-activated-tasks";
+export const getIncludeNeverActivatedTasks = (): boolean | undefined => {
+  const val = Cookies.get(INCLUDE_NEVER_ACTIVATED_TASKS);
+  return val === undefined ? undefined : val === "true";
+};
+
 export const SLACK_NOTIFICATION_BANNER = "has-closed-slack-banner";
 export const SUBSCRIPTION_METHOD = "subscription-method";
 export const SEEN_DEBUG_SPAWN_HOST_GUIDE_CUE =

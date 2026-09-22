@@ -3,7 +3,10 @@ import { Tooltip } from "@leafygreen-ui/tooltip";
 import Cookies from "js-cookie";
 import { useQueryParam } from "@evg-ui/lib/hooks";
 import { useVersionAnalytics } from "analytics/version/useVersionAnalytics";
-import { INCLUDE_NEVER_ACTIVATED_TASKS } from "constants/cookies";
+import {
+  INCLUDE_NEVER_ACTIVATED_TASKS,
+  getIncludeNeverActivatedTasks,
+} from "constants/cookies";
 import { PatchTasksQueryParams } from "types/task";
 
 interface IncludeNeverActivatedTasksToggleProps {
@@ -18,7 +21,7 @@ export const IncludeNeverActivatedTasksToggle: React.FC<
   const [includeNeverActivatedTasks, setIncludeNeverActivatedTasks] =
     useQueryParam<boolean | undefined>(
       PatchTasksQueryParams.IncludeNeverActivatedTasks,
-      Cookies.get(INCLUDE_NEVER_ACTIVATED_TASKS) === "true",
+      getIncludeNeverActivatedTasks(),
     );
 
   const handleIncludeNeverActivatedTasksChange = (

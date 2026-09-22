@@ -1,7 +1,6 @@
-import Cookies from "js-cookie";
 import { useQueryParam } from "@evg-ui/lib/hooks";
 import usePagination from "@evg-ui/lib/src/hooks/usePagination";
-import { INCLUDE_NEVER_ACTIVATED_TASKS } from "constants/cookies";
+import { getIncludeNeverActivatedTasks } from "constants/cookies";
 import { TableQueryParams } from "constants/queryParams";
 import {
   SortOrder,
@@ -35,9 +34,9 @@ export const useQueryVariables = (
     PatchTasksQueryParams.BaseStatuses,
     [],
   );
-  const [includeNeverActivatedTasks] = useQueryParam<boolean>(
+  const [includeNeverActivatedTasks] = useQueryParam<boolean | undefined>(
     PatchTasksQueryParams.IncludeNeverActivatedTasks,
-    Cookies.get(INCLUDE_NEVER_ACTIVATED_TASKS) === "true",
+    getIncludeNeverActivatedTasks(),
   );
 
   const sortsToApply: SortOrder[] = sorts

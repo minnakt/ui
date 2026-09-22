@@ -52,7 +52,7 @@ describe("useQueryVariables", () => {
       versionId,
       taskFilterOptions: {
         taskName: "generate",
-        includeNeverActivatedTasks: false,
+        includeNeverActivatedTasks: undefined,
         variant: "",
         statuses: ["success"],
         baseStatuses: [],
@@ -79,7 +79,7 @@ describe("useQueryVariables", () => {
       versionId,
       taskFilterOptions: {
         taskName: "generate",
-        includeNeverActivatedTasks: false,
+        includeNeverActivatedTasks: undefined,
         variant: "",
         statuses: ["success"],
         baseStatuses: [],
@@ -92,24 +92,47 @@ describe("useQueryVariables", () => {
     });
   });
 
-  it("includes includeNeverActivatedTasks if it is defined in the search string", () => {
-    const versionId = "version";
-    const search = "page=0&limit=20&includeNeverActivatedTasks=true";
-    const { result } = renderHook(() => useQueryVariables(versionId), {
-      wrapper: getWrapper(search),
+  describe("includes includeNeverActivatedTasks if it is defined in the search string", () => {
+    it("value is true", () => {
+      const versionId = "version";
+      const search = "page=0&limit=20&includeNeverActivatedTasks=true";
+      const { result } = renderHook(() => useQueryVariables(versionId), {
+        wrapper: getWrapper(search),
+      });
+      expect(result.current).toStrictEqual({
+        versionId,
+        taskFilterOptions: {
+          baseStatuses: [],
+          statuses: [],
+          sorts: [],
+          page: 0,
+          limit: 20,
+          includeNeverActivatedTasks: true,
+          taskName: "",
+          variant: "",
+        },
+      });
     });
-    expect(result.current).toStrictEqual({
-      versionId,
-      taskFilterOptions: {
-        baseStatuses: [],
-        statuses: [],
-        sorts: [],
-        page: 0,
-        limit: 20,
-        includeNeverActivatedTasks: true,
-        taskName: "",
-        variant: "",
-      },
+
+    it("value is false", () => {
+      const versionId = "version";
+      const search = "page=0&limit=20&includeNeverActivatedTasks=false";
+      const { result } = renderHook(() => useQueryVariables(versionId), {
+        wrapper: getWrapper(search),
+      });
+      expect(result.current).toStrictEqual({
+        versionId,
+        taskFilterOptions: {
+          baseStatuses: [],
+          statuses: [],
+          sorts: [],
+          page: 0,
+          limit: 20,
+          includeNeverActivatedTasks: false,
+          taskName: "",
+          variant: "",
+        },
+      });
     });
   });
 
@@ -146,27 +169,53 @@ describe("useQueryVariables", () => {
     ]);
   });
 
-  it("uses cookie when includeNeverActivatedTasks is not in the search string", () => {
-    const versionId = "version";
-    const search = "page=0&limit=20";
-    mockedGet.mockImplementation((key: string) =>
-      key === INCLUDE_NEVER_ACTIVATED_TASKS ? "true" : undefined,
-    );
-    const { result } = renderHook(() => useQueryVariables(versionId), {
-      wrapper: getWrapper(search),
+  describe("uses cookie when includeNeverActivatedTasks is not in the search string", () => {
+    it("cookie is true", () => {
+      const versionId = "version";
+      const search = "page=0&limit=20";
+      mockedGet.mockImplementation((key: string) =>
+        key === INCLUDE_NEVER_ACTIVATED_TASKS ? "true" : undefined,
+      );
+      const { result } = renderHook(() => useQueryVariables(versionId), {
+        wrapper: getWrapper(search),
+      });
+      expect(result.current).toStrictEqual({
+        versionId,
+        taskFilterOptions: {
+          taskName: "",
+          includeNeverActivatedTasks: true,
+          variant: "",
+          statuses: [],
+          baseStatuses: [],
+          sorts: [],
+          page: 0,
+          limit: 20,
+        },
+      });
     });
-    expect(result.current).toStrictEqual({
-      versionId,
-      taskFilterOptions: {
-        taskName: "",
-        includeNeverActivatedTasks: true,
-        variant: "",
-        statuses: [],
-        baseStatuses: [],
-        sorts: [],
-        page: 0,
-        limit: 20,
-      },
+
+    it("cookie is false", () => {
+      const versionId = "version";
+      const search = "page=0&limit=20";
+      mockedGet.mockImplementation((key: string) =>
+        key === INCLUDE_NEVER_ACTIVATED_TASKS ? "false" : undefined,
+      );
+      const { result } = renderHook(() => useQueryVariables(versionId), {
+        wrapper: getWrapper(search),
+      });
+      expect(result.current).toStrictEqual({
+        versionId,
+        taskFilterOptions: {
+          taskName: "",
+          includeNeverActivatedTasks: false,
+          variant: "",
+          statuses: [],
+          baseStatuses: [],
+          sorts: [],
+          page: 0,
+          limit: 20,
+        },
+      });
     });
   });
 });
